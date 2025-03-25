@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        user: streaming
+        uid: 1000
+    container_name: streaming-api-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - streaming-network
+    depends_on:
+      - db
+      - redis
+    environment:
+      - WWWGROUP=${WWWGROUP:-1000}
+      - WWWUSER=${WWWUSER:-1000}
+
+  db:
+    image: mysql:8.0
+    container_name: streaming-api-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - streaming-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:alpine
+    container_name: streaming-api-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - streaming-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: streaming-api-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - streaming-network
+    depends_on:
+      - app
+
+networks:
+  streaming-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local 

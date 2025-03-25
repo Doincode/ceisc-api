@@ -1,0 +1,1171 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-03-25T12:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_streaming_api",
+      "parentId": null,
+      "modified": 1742520000000,
+      "created": 1742520000000,
+      "name": "Streaming API Completa",
+      "description": "API de streaming com autenticação e pagamentos",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526122000,
+      "created": 1742526122000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8000/api"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1742526100000,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_auth_admin",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526122000,
+      "created": 1742526122000,
+      "name": "Admin Auth",
+      "data": {
+        "base_url": "http://localhost:8000/api",
+        "admin_email": "teste@example.com",
+        "admin_password": "senha123",
+        "client_id": "1",
+        "client_secret": "kkpAtzlr9r59GcPjctL71kArYlXZDpScy05m6v5F",
+        "token": "{% response 'body', 'req_oauth_token_admin', 'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "admin_email",
+          "admin_password",
+          "client_id",
+          "client_secret",
+          "token"
+        ]
+      },
+      "color": "#00ff00",
+      "isPrivate": false,
+      "metaSortKey": 1742526122000,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_auth_user",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526123000,
+      "created": 1742526123000,
+      "name": "User Auth",
+      "data": {
+        "base_url": "http://localhost:8000/api",
+        "user_email": "usuario@example.com",
+        "user_password": "senha123",
+        "client_id": "1",
+        "client_secret": "kkpAtzlr9r59GcPjctL71kArYlXZDpScy05m6v5F",
+        "token": "{% response 'body', 'req_oauth_token_user', 'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "user_email",
+          "user_password",
+          "client_id",
+          "client_secret",
+          "token"
+        ]
+      },
+      "color": "#0080ff",
+      "isPrivate": false,
+      "metaSortKey": 1742526123000,
+      "_type": "environment"
+    },
+    
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526140000,
+      "created": 1742526140000,
+      "name": "Autenticação",
+      "description": "Endpoints de autenticação",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1742526140000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_oauth_token_admin",
+      "parentId": "fld_auth",
+      "modified": 1742526150000,
+      "created": 1742526150000,
+      "url": "http://localhost:8000/oauth/token",
+      "name": "Obter Token OAuth (Admin)",
+      "description": "Obtém um token OAuth para o usuário administrador",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"grant_type\": \"password\",\n\t\"client_id\": \"{{ _.client_id }}\",\n\t\"client_secret\": \"{{ _.client_secret }}\",\n\t\"username\": \"{{ _.admin_email }}\",\n\t\"password\": \"{{ _.admin_password }}\",\n\t\"scope\": \"\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1742526150000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_oauth_token_user",
+      "parentId": "fld_auth",
+      "modified": 1742526151000,
+      "created": 1742526151000,
+      "url": "http://localhost:8000/oauth/token",
+      "name": "Obter Token OAuth (Usuário)",
+      "description": "Obtém um token OAuth para o usuário comum",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"grant_type\": \"password\",\n\t\"client_id\": \"{{ _.client_id }}\",\n\t\"client_secret\": \"{{ _.client_secret }}\",\n\t\"username\": \"{{ _.user_email }}\",\n\t\"password\": \"{{ _.user_password }}\",\n\t\"scope\": \"\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1742526149500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_login",
+      "parentId": "fld_auth",
+      "modified": 1742526151000,
+      "created": 1742526151000,
+      "url": "{{ _.base_url }}/login",
+      "name": "Login",
+      "description": "Autenticação via Login API",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"email\": \"{{ _.admin_email }}\",\n\t\"password\": \"{{ _.admin_password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1742526149000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_register",
+      "parentId": "fld_auth",
+      "modified": 1742526152000,
+      "created": 1742526152000,
+      "url": "{{ _.base_url }}/register",
+      "name": "Registrar",
+      "description": "Registrar novo usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Novo Usuário\",\n\t\"email\": \"novo@example.com\",\n\t\"password\": \"senha123\",\n\t\"password_confirmation\": \"senha123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1742526148000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_logout",
+      "parentId": "fld_auth",
+      "modified": 1742526153000,
+      "created": 1742526153000,
+      "url": "{{ _.base_url }}/logout",
+      "name": "Logout",
+      "description": "Encerrar sessão",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526147000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    
+    {
+      "_id": "fld_user",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526160000,
+      "created": 1742526160000,
+      "name": "Usuários",
+      "description": "Endpoints de gerenciamento de usuários",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1742526130000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_user_info",
+      "parentId": "fld_user",
+      "modified": 1742526161000,
+      "created": 1742526161000,
+      "url": "{{ _.base_url }}/user",
+      "name": "Informações do Usuário",
+      "description": "Obtém informações do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526161000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_user_role",
+      "parentId": "fld_user",
+      "modified": 1742526162000,
+      "created": 1742526162000,
+      "url": "{{ _.base_url }}/user/role",
+      "name": "Verificar Papel/Permissões",
+      "description": "Verifica o papel e as permissões do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526160000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_users",
+      "parentId": "fld_user",
+      "modified": 1742526163000,
+      "created": 1742526163000,
+      "url": "{{ _.base_url }}/admin/users",
+      "name": "Listar Usuários (Admin)",
+      "description": "Lista todos os usuários (requer permissão de admin)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526159000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_user",
+      "parentId": "fld_user",
+      "modified": 1742526164000,
+      "created": 1742526164000,
+      "url": "{{ _.base_url }}/admin/users/2",
+      "name": "Atualizar Usuário (Admin)",
+      "description": "Atualiza as informações de um usuário (requer permissão de admin)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Nome Atualizado\",\n\t\"email\": \"atualizado@example.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526158000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_user",
+      "parentId": "fld_user",
+      "modified": 1742526165000,
+      "created": 1742526165000,
+      "url": "{{ _.base_url }}/admin/users/2",
+      "name": "Excluir Usuário (Admin)",
+      "description": "Remove um usuário (requer permissão de admin)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526157000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_user_permissions",
+      "parentId": "fld_user",
+      "modified": 1742526166000,
+      "created": 1742526166000,
+      "url": "{{ _.base_url }}/admin/users/2/permissions",
+      "name": "Atualizar Permissões (Admin)",
+      "description": "Atualiza as permissões de um usuário (requer permissão de admin)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"permissions\": [\"view contents\", \"create contents\"]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526156000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_user_role",
+      "parentId": "fld_user",
+      "modified": 1742526167000,
+      "created": 1742526167000,
+      "url": "{{ _.base_url }}/admin/users/2/role",
+      "name": "Atualizar Papel (Admin)",
+      "description": "Atualiza o papel de um usuário (requer permissão de admin)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"role\": \"manager\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526155000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_promote_to_admin",
+      "parentId": "fld_user",
+      "modified": 1742526168000,
+      "created": 1742526168000,
+      "url": "{{ _.base_url }}/admin/users/2/promote-to-admin",
+      "name": "Promover a Admin",
+      "description": "Promove um usuário a administrador (requer permissão de admin)",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526154000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    
+    {
+      "_id": "fld_plans",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526170000,
+      "created": 1742526170000,
+      "name": "Planos",
+      "description": "Endpoints de gerenciamento de planos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1742526120000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_list_plans",
+      "parentId": "fld_plans",
+      "modified": 1742526171000,
+      "created": 1742526171000,
+      "url": "{{ _.base_url }}/plans",
+      "name": "Listar Planos",
+      "description": "Lista todos os planos disponíveis (público)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1742526171000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_plan_detail",
+      "parentId": "fld_plans",
+      "modified": 1742526172000,
+      "created": 1742526172000,
+      "url": "{{ _.base_url }}/plans/1",
+      "name": "Detalhes do Plano",
+      "description": "Obtém detalhes de um plano específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1742526170000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_admin_list_plans",
+      "parentId": "fld_plans",
+      "modified": 1742526173000,
+      "created": 1742526173000,
+      "url": "{{ _.base_url }}/admin/plans",
+      "name": "Listar Planos (Admin)",
+      "description": "Lista todos os planos com detalhes administrativos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526169000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_plan",
+      "parentId": "fld_plans",
+      "modified": 1742526174000,
+      "created": 1742526174000,
+      "url": "{{ _.base_url }}/admin/plans",
+      "name": "Criar Plano (Admin)",
+      "description": "Cria um novo plano (requer permissão de admin)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Plano Premium\",\n\t\"description\": \"Acesso ilimitado a todo o conteúdo\",\n\t\"price\": 29.90,\n\t\"features\": [\"Acesso ilimitado\", \"Conteúdo exclusivo\", \"Suporte prioritário\"],\n\t\"is_active\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526168000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_plan",
+      "parentId": "fld_plans",
+      "modified": 1742526175000,
+      "created": 1742526175000,
+      "url": "{{ _.base_url }}/admin/plans/1",
+      "name": "Atualizar Plano (Admin)",
+      "description": "Atualiza um plano existente (requer permissão de admin)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Plano Premium Atualizado\",\n\t\"description\": \"Acesso ilimitado com novos recursos\",\n\t\"price\": 39.90,\n\t\"features\": [\"Acesso ilimitado\", \"Conteúdo exclusivo\", \"Suporte prioritário\", \"Downloads ilimitados\"],\n\t\"is_active\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526167000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_plan",
+      "parentId": "fld_plans",
+      "modified": 1742526176000,
+      "created": 1742526176000,
+      "url": "{{ _.base_url }}/admin/plans/1",
+      "name": "Excluir Plano (Admin)",
+      "description": "Remove um plano (requer permissão de admin)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526166000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    
+    {
+      "_id": "fld_subscriptions",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526180000,
+      "created": 1742526180000,
+      "name": "Assinaturas",
+      "description": "Endpoints de gerenciamento de assinaturas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1742526110000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_user_subscriptions",
+      "parentId": "fld_subscriptions",
+      "modified": 1742526181000,
+      "created": 1742526181000,
+      "url": "{{ _.base_url }}/subscriptions",
+      "name": "Minhas Assinaturas",
+      "description": "Lista todas as assinaturas do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526181000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_subscription_detail",
+      "parentId": "fld_subscriptions",
+      "modified": 1742526182000,
+      "created": 1742526182000,
+      "url": "{{ _.base_url }}/subscriptions/1",
+      "name": "Detalhes da Assinatura",
+      "description": "Obtém detalhes de uma assinatura específica",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526180000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_subscription",
+      "parentId": "fld_subscriptions",
+      "modified": 1742526183000,
+      "created": 1742526183000,
+      "url": "{{ _.base_url }}/subscriptions",
+      "name": "Criar Assinatura",
+      "description": "Inicia o processo de assinatura para um plano",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"plan_id\": 1,\n\t\"payment_method\": \"credit_card\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526179000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_cancel_subscription",
+      "parentId": "fld_subscriptions",
+      "modified": 1742526184000,
+      "created": 1742526184000,
+      "url": "{{ _.base_url }}/subscriptions/1/cancel",
+      "name": "Cancelar Assinatura",
+      "description": "Cancela uma assinatura ativa",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526178000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_reactivate_subscription",
+      "parentId": "fld_subscriptions",
+      "modified": 1742526185000,
+      "created": 1742526185000,
+      "url": "{{ _.base_url }}/subscriptions/1/reactivate",
+      "name": "Reativar Assinatura",
+      "description": "Reativa uma assinatura cancelada",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526177000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_change_plan",
+      "parentId": "fld_subscriptions",
+      "modified": 1742526186000,
+      "created": 1742526186000,
+      "url": "{{ _.base_url }}/subscriptions/1/change-plan",
+      "name": "Mudar de Plano",
+      "description": "Altera o plano de uma assinatura existente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"new_plan_id\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526176000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_admin_list_subscriptions",
+      "parentId": "fld_subscriptions",
+      "modified": 1742526187000,
+      "created": 1742526187000,
+      "url": "{{ _.base_url }}/admin/subscriptions",
+      "name": "Listar Todas Assinaturas (Admin)",
+      "description": "Lista todas as assinaturas (requer permissão de admin)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526175000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    
+    {
+      "_id": "fld_payments",
+      "parentId": "wrk_streaming_api",
+      "modified": 1742526190000,
+      "created": 1742526190000,
+      "name": "Pagamentos",
+      "description": "Endpoints de gerenciamento de pagamentos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1742526100000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_user_payments",
+      "parentId": "fld_payments",
+      "modified": 1742526191000,
+      "created": 1742526191000,
+      "url": "{{ _.base_url }}/payments",
+      "name": "Meus Pagamentos",
+      "description": "Lista todos os pagamentos do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526191000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_payment_detail",
+      "parentId": "fld_payments",
+      "modified": 1742526192000,
+      "created": 1742526192000,
+      "url": "{{ _.base_url }}/payments/1",
+      "name": "Detalhes do Pagamento",
+      "description": "Obtém detalhes de um pagamento específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526190000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_payment",
+      "parentId": "fld_payments",
+      "modified": 1742526193000,
+      "created": 1742526193000,
+      "url": "{{ _.base_url }}/payments",
+      "name": "Criar Pagamento",
+      "description": "Realiza um pagamento para uma assinatura",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"subscription_id\": 1,\n\t\"payment_method\": \"credit_card\",\n\t\"card\": {\n\t\t\"number\": \"4242424242424242\",\n\t\t\"exp_month\": 12,\n\t\t\"exp_year\": 2025,\n\t\t\"cvc\": \"123\"\n\t}\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526189000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_payment_methods",
+      "parentId": "fld_payments",
+      "modified": 1742526194000,
+      "created": 1742526194000,
+      "url": "{{ _.base_url }}/payment-methods",
+      "name": "Listar Métodos de Pagamento",
+      "description": "Lista todos os métodos de pagamento disponíveis",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526188000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_save_payment_method",
+      "parentId": "fld_payments",
+      "modified": 1742526195000,
+      "created": 1742526195000,
+      "url": "{{ _.base_url }}/payment-methods",
+      "name": "Salvar Método de Pagamento",
+      "description": "Salva um novo método de pagamento para o usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"type\": \"credit_card\",\n\t\"card\": {\n\t\t\"number\": \"4242424242424242\",\n\t\t\"exp_month\": 12,\n\t\t\"exp_year\": 2025,\n\t\t\"cvc\": \"123\",\n\t\t\"holder_name\": \"Nome do Titular\"\n\t},\n\t\"is_default\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526187000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_payment_method",
+      "parentId": "fld_payments",
+      "modified": 1742526196000,
+      "created": 1742526196000,
+      "url": "{{ _.base_url }}/payment-methods/1",
+      "name": "Remover Método de Pagamento",
+      "description": "Remove um método de pagamento salvo",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526186000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_refund_payment",
+      "parentId": "fld_payments",
+      "modified": 1742526197000,
+      "created": 1742526197000,
+      "url": "{{ _.base_url }}/admin/payments/1/refund",
+      "name": "Reembolsar Pagamento (Admin)",
+      "description": "Realiza o reembolso de um pagamento (requer permissão de admin)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"reason\": \"Solicitação do cliente\",\n\t\"amount\": \"full\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526185000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_admin_list_payments",
+      "parentId": "fld_payments",
+      "modified": 1742526198000,
+      "created": 1742526198000,
+      "url": "{{ _.base_url }}/admin/payments",
+      "name": "Listar Todos Pagamentos (Admin)",
+      "description": "Lista todos os pagamentos (requer permissão de admin)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
+      "metaSortKey": -1742526184000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_payment_webhook",
+      "parentId": "fld_payments",
+      "modified": 1742526199000,
+      "created": 1742526199000,
+      "url": "{{ _.base_url }}/webhooks/payment",
+      "name": "Webhook de Pagamentos",
+      "description": "Endpoint para receber notificações de processadores de pagamento",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"event\": \"payment.success\",\n\t\"data\": {\n\t\t\"reference_id\": \"sub_123456\",\n\t\t\"transaction_id\": \"tx_987654\",\n\t\t\"amount\": 29.90,\n\t\t\"status\": \"approved\"\n\t}\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "X-Signature",
+          "value": "assinatura-webhook-exemplo"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1742526183000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    }
+  ]
+} 

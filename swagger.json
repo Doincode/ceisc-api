@@ -1,0 +1,3856 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Streaming de Cursos",
+        "description": "API para gerenciamento de cursos, usuários e assinaturas. Para usar a API, faça autenticação pelo endpoint /api/login ou usando OAuth2.",
+        "contact": {
+            "name": "Suporte API",
+            "email": "contato@example.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Servidor Local"
+        }
+    ],
+    "paths": {
+        "/contents": {
+            "get": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Listar cursos",
+                "description": "Retorna a lista de todos os cursos preparatórios disponíveis",
+                "operationId": "listContents",
+                "responses": {
+                    "200": {
+                        "description": "Lista de cursos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Direito Civil para OAB"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Curso completo de Direito Civil para o Exame da OAB"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "video"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "example": "https://example.com/curso-direito-civil.mp4"
+                                            },
+                                            "thumbnail": {
+                                                "type": "string",
+                                                "example": "https://example.com/thumb-direito-civil.jpg"
+                                            },
+                                            "featured": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/contents": {
+            "post": {
+                "tags": [
+                    "Admin",
+                    "Cursos"
+                ],
+                "summary": "Criar curso",
+                "description": "Cria um novo curso preparatório para OAB",
+                "operationId": "createContent",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "type",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Direito Constitucional para OAB"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Curso completo de Direito Constitucional para aprovação no Exame da OAB"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "video",
+                                            "audio",
+                                            "pdf",
+                                            "text"
+                                        ],
+                                        "example": "video"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://example.com/curso-direito-constitucional.mp4"
+                                    },
+                                    "thumbnail": {
+                                        "type": "string",
+                                        "example": "https://example.com/thumb-direito-constitucional.jpg"
+                                    },
+                                    "featured": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Curso criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Direito Constitucional para OAB"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Curso completo de Direito Constitucional para aprovação no Exame da OAB"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://example.com/curso-direito-constitucional.mp4"
+                                        },
+                                        "thumbnail": {
+                                            "type": "string",
+                                            "example": "https://example.com/thumb-direito-constitucional.jpg"
+                                        },
+                                        "featured": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - sem permissão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/contents/{content}": {
+            "get": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Exibir curso",
+                "description": "Retorna os detalhes de um curso específico",
+                "operationId": "showContent",
+                "parameters": [
+                    {
+                        "name": "content",
+                        "in": "path",
+                        "description": "ID do curso",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do curso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Direito Civil para OAB"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Curso completo de Direito Civil para o exame da OAB"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://example.com/curso-direito-civil.mp4"
+                                        },
+                                        "thumbnail": {
+                                            "type": "string",
+                                            "example": "https://example.com/thumb-direito-civil.jpg"
+                                        },
+                                        "featured": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "is_premium": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Curso não encontrado"
+                    },
+                    "403": {
+                        "description": "Proibido - Assinatura ativa necessária para conteúdo premium"
+                    }
+                }
+            }
+        },
+        "/admin/contents/{content}": {
+            "put": {
+                "tags": [
+                    "Admin",
+                    "Cursos"
+                ],
+                "summary": "Atualizar curso",
+                "description": "Atualiza um curso existente",
+                "operationId": "updateContent",
+                "parameters": [
+                    {
+                        "name": "content",
+                        "in": "path",
+                        "description": "ID do curso",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Direito Civil Atualizado para OAB"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Curso atualizado de Direito Civil com as últimas alterações legislativas"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "video",
+                                            "audio",
+                                            "pdf",
+                                            "text"
+                                        ],
+                                        "example": "video"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://example.com/curso-direito-civil-atualizado.mp4"
+                                    },
+                                    "thumbnail": {
+                                        "type": "string",
+                                        "example": "https://example.com/thumb-direito-civil-atualizado.jpg"
+                                    },
+                                    "featured": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Curso atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Direito Civil Atualizado para OAB"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Curso atualizado de Direito Civil com as últimas alterações legislativas"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://example.com/curso-direito-civil-atualizado.mp4"
+                                        },
+                                        "thumbnail": {
+                                            "type": "string",
+                                            "example": "https://example.com/thumb-direito-civil-atualizado.jpg"
+                                        },
+                                        "featured": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Curso não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - sem permissão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin",
+                    "Cursos"
+                ],
+                "summary": "Excluir curso",
+                "description": "Remove um curso existente",
+                "operationId": "deleteContent",
+                "parameters": [
+                    {
+                        "name": "content",
+                        "in": "path",
+                        "description": "ID do curso",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Curso excluído com sucesso"
+                    },
+                    "404": {
+                        "description": "Curso não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - sem permissão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/contents/featured": {
+            "get": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Listar cursos em destaque",
+                "description": "Retorna a lista de cursos marcados como destaque",
+                "operationId": "listFeaturedContents",
+                "responses": {
+                    "200": {
+                        "description": "Lista de cursos em destaque",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Direito Penal para OAB"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Curso completo de Direito Penal para o Exame da OAB"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "video"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "example": "https://example.com/curso-direito-penal.mp4"
+                                            },
+                                            "thumbnail": {
+                                                "type": "string",
+                                                "example": "https://example.com/thumb-direito-penal.jpg"
+                                            },
+                                            "featured": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contents/type/{type}": {
+            "get": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Listar cursos por tipo",
+                "description": "Retorna a lista de cursos de um tipo específico",
+                "operationId": "listContentsByType",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "description": "Tipo de curso (video, audio, pdf, text)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "video",
+                                "audio",
+                                "pdf",
+                                "text"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de cursos do tipo especificado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Direito Civil para OAB"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Curso completo de Direito Civil para o Exame da OAB"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "video"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "example": "https://example.com/curso-direito-civil.mp4"
+                                            },
+                                            "thumbnail": {
+                                                "type": "string",
+                                                "example": "https://example.com/thumb-direito-civil.jpg"
+                                            },
+                                            "featured": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Tipo de curso inválido"
+                    }
+                }
+            }
+        },
+        "/premium-content": {
+            "get": {
+                "tags": [
+                    "Conteúdos Premium"
+                ],
+                "summary": "Listar conteúdos premium",
+                "description": "Retorna a lista de conteúdos premium disponíveis (requer assinatura ativa ou acesso de administrador)",
+                "operationId": "listPremiumContents",
+                "responses": {
+                    "200": {
+                        "description": "Lista de conteúdos premium",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Direito Civil para OAB - Premium"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Curso exclusivo premium de Direito Civil para o Exame da OAB"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "video"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "example": "https://example.com/premium/curso-direito-civil.mp4"
+                                            },
+                                            "thumbnail": {
+                                                "type": "string",
+                                                "example": "https://example.com/premium/thumb-direito-civil.jpg"
+                                            },
+                                            "is_premium": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - assinatura inativa"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payments/checkout/{plan}": {
+            "get": {
+                "tags": [
+                    "Pagamentos"
+                ],
+                "summary": "Obter dados para checkout",
+                "description": "Retorna os dados necessários para realizar o checkout de um plano",
+                "operationId": "getCheckoutData",
+                "parameters": [
+                    {
+                        "name": "plan",
+                        "in": "path",
+                        "description": "ID do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados para checkout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "plan": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Plano Básico"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 29.9
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "client_secret": {
+                                            "type": "string",
+                                            "example": "seti_1NpEUXXXXXXXXXXXXXXXXXX"
+                                        },
+                                        "stripe_key": {
+                                            "type": "string",
+                                            "example": "pk_test_XXXXXXXXXXXXXXXXXXXXXXXX"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "404": {
+                        "description": "Plano não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payments/subscribe": {
+            "post": {
+                "tags": [
+                    "Pagamentos",
+                    "Assinaturas"
+                ],
+                "summary": "Criar assinatura com pagamento",
+                "description": "Processa o pagamento e cria uma assinatura",
+                "operationId": "createSubscriptionWithPayment",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id",
+                                    "payment_method"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "example": "pm_card_visa"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Assinatura criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Assinatura criada com sucesso"
+                                        },
+                                        "subscription": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "plan_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "active"
+                                                },
+                                                "start_date": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "end_date": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "402": {
+                        "description": "Pagamento requer confirmação adicional",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "payment_intent": {
+                                            "type": "string",
+                                            "example": "pi_XXXXXXXXXXXXXXXXXXXXXXXX"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O pagamento requer confirmação adicional."
+                                        },
+                                        "payment_url": {
+                                            "type": "string",
+                                            "example": "http://localhost:8000/stripe/payment/pi_XXXXXXXXXXXXXXXXXXXXXXXX"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro ao processar o pagamento"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payments/cancel/{id}": {
+            "delete": {
+                "tags": [
+                    "Pagamentos",
+                    "Assinaturas"
+                ],
+                "summary": "Cancelar assinatura com reembolso",
+                "description": "Cancela uma assinatura e processa o reembolso quando aplicável",
+                "operationId": "cancelSubscriptionWithRefund",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Assinatura cancelada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Assinatura cancelada com sucesso"
+                                        },
+                                        "subscription": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "canceled"
+                                                },
+                                                "canceled_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - assinatura não pertence ao usuário"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payment-methods/{paymentMethod}": {
+            "put": {
+                "tags": [
+                    "Pagamentos"
+                ],
+                "summary": "Atualizar método de pagamento",
+                "description": "Atualiza um método de pagamento existente",
+                "operationId": "updateUserPaymentMethod",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "payment_method"
+                                ],
+                                "properties": {
+                                    "payment_method": {
+                                        "type": "string",
+                                        "example": "pm_card_mastercard"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Método de pagamento atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Método de pagamento atualizado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro ao atualizar o método de pagamento"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/payments/invoices": {
+            "get": {
+                "tags": [
+                    "Pagamentos"
+                ],
+                "summary": "Listar faturas",
+                "description": "Retorna o histórico de faturas do usuário",
+                "operationId": "listInvoices",
+                "responses": {
+                    "200": {
+                        "description": "Lista de faturas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "invoices": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "in_XXXXXXXXXXXXXXXXXXXXXXXX"
+                                                    },
+                                                    "total": {
+                                                        "type": "string",
+                                                        "example": "R$ 29,90"
+                                                    },
+                                                    "date": {
+                                                        "type": "string",
+                                                        "example": "14 Mar 2025"
+                                                    },
+                                                    "download_url": {
+                                                        "type": "string",
+                                                        "example": "http://localhost:8000/api/invoices/in_XXXXXXXXXXXXXXXXXXXXXXXX"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/invoices/{invoiceId}": {
+            "get": {
+                "tags": [
+                    "Pagamentos"
+                ],
+                "summary": "Baixar fatura",
+                "description": "Faz o download de uma fatura específica",
+                "operationId": "downloadInvoice",
+                "parameters": [
+                    {
+                        "name": "invoiceId",
+                        "in": "path",
+                        "description": "ID da fatura",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fatura em formato PDF",
+                        "content": {
+                            "application/pdf": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Fatura não encontrada"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - fatura não pertence ao usuário"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/plans": {
+            "get": {
+                "tags": [
+                    "Planos"
+                ],
+                "summary": "Listar planos",
+                "description": "Retorna a lista de planos ativos",
+                "operationId": "listPlans",
+                "parameters": [
+                    {
+                        "name": "all",
+                        "in": "query",
+                        "description": "Retornar todos os planos (incluindo inativos). Requer autenticação como admin.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de planos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Básico"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Acesso a cursos básicos para a primeira fase da OAB"
+                                            },
+                                            "price": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 29.9
+                                            },
+                                            "billing_cycle": {
+                                                "type": "string",
+                                                "example": "mensal"
+                                            },
+                                            "discount_percentage": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 0
+                                            },
+                                            "features": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "is_active": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "stripe_product_id": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "stripe_price_id": {
+                                                "type": "string",
+                                                "nullable": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/plans/{plan}": {
+            "get": {
+                "tags": [
+                    "Planos"
+                ],
+                "summary": "Exibir plano",
+                "description": "Retorna os detalhes de um plano específico",
+                "operationId": "showPlan",
+                "parameters": [
+                    {
+                        "name": "plan",
+                        "in": "path",
+                        "description": "ID do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do plano",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Básico"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Acesso a cursos básicos para a primeira fase da OAB"
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 29.9
+                                        },
+                                        "billing_cycle": {
+                                            "type": "string",
+                                            "example": "mensal"
+                                        },
+                                        "discount_percentage": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 0
+                                        },
+                                        "features": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "is_active": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "stripe_product_id": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "stripe_price_id": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Plano não encontrado"
+                    }
+                }
+            }
+        },
+        "/admin/plans": {
+            "post": {
+                "tags": [
+                    "Admin",
+                    "Planos"
+                ],
+                "summary": "Criar plano",
+                "description": "Cria um novo plano de assinatura",
+                "operationId": "createPlan",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "billing_cycle"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Plano Premium OAB"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Acesso a todos os cursos preparatórios para 1ª e 2ª fase da OAB"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 59.9
+                                    },
+                                    "billing_cycle": {
+                                        "type": "string",
+                                        "enum": [
+                                            "mensal",
+                                            "trimestral",
+                                            "anual"
+                                        ],
+                                        "example": "mensal"
+                                    },
+                                    "discount_percentage": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10
+                                    },
+                                    "features": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Plano criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 7
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Plano Premium OAB"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Acesso a todos os cursos preparatórios para 1ª e 2ª fase da OAB"
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 59.9
+                                        },
+                                        "billing_cycle": {
+                                            "type": "string",
+                                            "example": "mensal"
+                                        },
+                                        "discount_percentage": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 10
+                                        },
+                                        "features": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "is_active": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - sem permissão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/plans/{plan}": {
+            "put": {
+                "tags": [
+                    "Admin",
+                    "Planos"
+                ],
+                "summary": "Atualizar plano",
+                "description": "Atualiza um plano existente",
+                "operationId": "updatePlan",
+                "parameters": [
+                    {
+                        "name": "plan",
+                        "in": "path",
+                        "description": "ID do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Plano Premium OAB Atualizado"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Acesso a todos os cursos preparatórios para OAB com materiais atualizados"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 69.9
+                                    },
+                                    "billing_cycle": {
+                                        "type": "string",
+                                        "enum": [
+                                            "mensal",
+                                            "trimestral",
+                                            "anual"
+                                        ],
+                                        "example": "mensal"
+                                    },
+                                    "discount_percentage": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 15
+                                    },
+                                    "features": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Plano atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Plano Premium OAB Atualizado"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Acesso a todos os cursos preparatórios para OAB com materiais atualizados"
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 69.9
+                                        },
+                                        "billing_cycle": {
+                                            "type": "string",
+                                            "example": "mensal"
+                                        },
+                                        "discount_percentage": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 15
+                                        },
+                                        "features": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "is_active": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Plano não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - sem permissão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin",
+                    "Planos"
+                ],
+                "summary": "Desativar plano",
+                "description": "Desativa um plano (não exclui para manter histórico)",
+                "operationId": "deactivatePlan",
+                "parameters": [
+                    {
+                        "name": "plan",
+                        "in": "path",
+                        "description": "ID do plano",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Plano desativado com sucesso"
+                    },
+                    "404": {
+                        "description": "Plano não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - sem permissão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sandbox": {
+            "get": {
+                "tags": [
+                    "Sandbox"
+                ],
+                "summary": "Página inicial do sandbox do Stripe",
+                "description": "Retorna informações sobre o ambiente sandbox do Stripe",
+                "operationId": "sandboxIndex",
+                "responses": {
+                    "200": {
+                        "description": "Informações do sandbox",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bem-vindo ao ambiente sandbox do Stripe"
+                                        },
+                                        "stripe_key": {
+                                            "type": "string",
+                                            "example": "pk_test_XXXXXXXXXXXXXXXXXXXXXXXX"
+                                        },
+                                        "test_cards": {
+                                            "properties": {
+                                                "success": {
+                                                    "type": "string",
+                                                    "example": "4242 4242 4242 4242"
+                                                },
+                                                "requires_auth": {
+                                                    "type": "string",
+                                                    "example": "4000 0025 0000 3155"
+                                                },
+                                                "declined": {
+                                                    "type": "string",
+                                                    "example": "4000 0000 0000 0002"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "endpoints": {
+                                            "properties": {
+                                                "create_customer": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/create-customer"
+                                                },
+                                                "create_payment_method": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/create-payment-method"
+                                                },
+                                                "create_payment_intent": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/create-payment-intent"
+                                                },
+                                                "create_subscription": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/create-subscription"
+                                                },
+                                                "sync_plan": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/sync-plan/{plan}"
+                                                },
+                                                "list_payment_methods": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/payment-methods"
+                                                },
+                                                "list_invoices": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/invoices"
+                                                },
+                                                "list_plans": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/plans"
+                                                },
+                                                "simulate_expiration": {
+                                                    "type": "string",
+                                                    "example": "/api/sandbox/simulate-expiration"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sandbox/test-connection": {
+            "get": {
+                "tags": [
+                    "Sandbox"
+                ],
+                "summary": "Testar conexão com o Stripe",
+                "description": "Verifica se as chaves do Stripe estão configuradas corretamente",
+                "operationId": "testStripeConnection",
+                "responses": {
+                    "200": {
+                        "description": "Resultado do teste de conexão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Conexão com o Stripe estabelecida com sucesso"
+                                        },
+                                        "account": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "acct_1NpEUXXXXXXXXXXX"
+                                                },
+                                                "business_type": {
+                                                    "type": "string",
+                                                    "example": "company"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "contato@example.com"
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "BR"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao conectar com o Stripe",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao conectar com o Stripe: Invalid API Key provided"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid API Key provided"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sandbox/create-customer": {
+            "post": {
+                "tags": [
+                    "Sandbox"
+                ],
+                "summary": "Criar cliente no Stripe",
+                "description": "Cria um cliente no Stripe para o usuário autenticado",
+                "operationId": "createStripeCustomer",
+                "responses": {
+                    "200": {
+                        "description": "Cliente criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cliente criado com sucesso no Stripe"
+                                        },
+                                        "customer": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sandbox/create-payment-method": {
+            "post": {
+                "tags": [
+                    "Sandbox"
+                ],
+                "summary": "Criar método de pagamento",
+                "description": "Cria um método de pagamento de teste no Stripe usando token",
+                "operationId": "createStripePaymentMethod",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "tok_visa"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Método de pagamento criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Método de pagamento criado com sucesso"
+                                        },
+                                        "payment_method": {
+                                            "type": "object"
+                                        },
+                                        "info": {
+                                            "type": "string",
+                                            "example": "Tokens de teste disponíveis: tok_visa, tok_mastercard, tok_amex, tok_discover"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "500": {
+                        "description": "Erro ao criar método de pagamento"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sandbox/plans": {
+            "get": {
+                "tags": [
+                    "Sandbox"
+                ],
+                "summary": "Listar planos com informações do Stripe",
+                "description": "Retorna a lista de planos com informações de sincronização com o Stripe",
+                "operationId": "listPlansWithStripeInfo",
+                "responses": {
+                    "200": {
+                        "description": "Lista de planos com informações do Stripe",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Plano Básico"
+                                            },
+                                            "price": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 29.9
+                                            },
+                                            "billing_cycle": {
+                                                "type": "string",
+                                                "example": "mensal"
+                                            },
+                                            "stripe_product_id": {
+                                                "type": "string",
+                                                "example": "prod_XXXXXXXXXXXXXXXX"
+                                            },
+                                            "stripe_price_id": {
+                                                "type": "string",
+                                                "example": "price_XXXXXXXXXXXXXXXX"
+                                            },
+                                            "is_synced_with_stripe": {
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sandbox/simulate-expiration": {
+            "post": {
+                "tags": [
+                    "Sandbox"
+                ],
+                "summary": "Simular expiração de assinatura",
+                "description": "Simula a expiração de uma assinatura para testes",
+                "operationId": "simulateExpiration",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "subscription_id"
+                                ],
+                                "properties": {
+                                    "subscription_id": {
+                                        "description": "ID da assinatura",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "should_renew": {
+                                        "description": "Se a assinatura deve ser renovada automaticamente",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Simulação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Simulação de expiração realizada com sucesso"
+                                        },
+                                        "was_renewed": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "subscription": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "active"
+                                                },
+                                                "start_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-03-16T22:50:17.000000Z"
+                                                },
+                                                "end_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-04-16T22:50:17.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Você não tem permissão para simular a expiração desta assinatura"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Assinatura não encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "subscription_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O campo subscription id é obrigatório."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/sandbox/test-tokens": {
+            "get": {
+                "tags": [
+                    "Sandbox"
+                ],
+                "summary": "Listar tokens de teste do Stripe",
+                "description": "Retorna a lista de tokens de teste disponíveis para o Stripe",
+                "operationId": "listTestTokens",
+                "responses": {
+                    "200": {
+                        "description": "Lista de tokens de teste",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "tokens": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/subscriptions": {
+            "get": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Listar assinaturas do usuário",
+                "description": "Retorna a lista de assinaturas do usuário autenticado",
+                "operationId": "listUserSubscriptions",
+                "responses": {
+                    "200": {
+                        "description": "Lista de assinaturas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "user_id": {
+                                                "type": "integer",
+                                                "example": 3
+                                            },
+                                            "plan_id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "active"
+                                            },
+                                            "start_date": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "end_date": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "canceled_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "nullable": true
+                                            },
+                                            "trial_ends_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "nullable": true
+                                            },
+                                            "last_payment_date": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "nullable": true
+                                            },
+                                            "next_payment_date": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "nullable": true
+                                            },
+                                            "auto_renew": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "plan": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Plano OAB Básico"
+                                                    },
+                                                    "price": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 29.9
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "oauth2": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Criar assinatura",
+                "description": "Cria uma nova assinatura para o usuário autenticado",
+                "operationId": "createSubscription",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "example": "credit_card"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Assinatura criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "plan_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        },
+                                        "start_date": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "end_date": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "auto_renew": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "404": {
+                        "description": "Plano não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/subscriptions/{subscription}": {
+            "get": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Exibir assinatura",
+                "description": "Retorna os detalhes de uma assinatura específica",
+                "operationId": "showSubscription",
+                "parameters": [
+                    {
+                        "name": "subscription",
+                        "in": "path",
+                        "description": "ID da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes da assinatura",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "plan_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "active"
+                                        },
+                                        "start_date": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "end_date": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "canceled_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "nullable": true
+                                        },
+                                        "trial_ends_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "nullable": true
+                                        },
+                                        "last_payment_date": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "nullable": true
+                                        },
+                                        "next_payment_date": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "nullable": true
+                                        },
+                                        "auto_renew": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "plan": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Plano OAB Básico"
+                                                },
+                                                "price": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 29.9
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada"
+                    },
+                    "403": {
+                        "description": "Proibido - assinatura não pertence ao usuário"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Atualizar assinatura",
+                "description": "Atualiza uma assinatura existente",
+                "operationId": "updateSubscription",
+                "parameters": [
+                    {
+                        "name": "subscription",
+                        "in": "path",
+                        "description": "ID da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "auto_renew": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Assinatura atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "user_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "plan_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "active"
+                                        },
+                                        "auto_renew": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada"
+                    },
+                    "403": {
+                        "description": "Proibido - assinatura não pertence ao usuário"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Cancelar assinatura",
+                "description": "Cancela uma assinatura existente",
+                "operationId": "cancelSubscription",
+                "parameters": [
+                    {
+                        "name": "subscription",
+                        "in": "path",
+                        "description": "ID da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Assinatura cancelada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Assinatura cancelada com sucesso"
+                                        },
+                                        "subscription": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "canceled"
+                                                },
+                                                "canceled_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada"
+                    },
+                    "403": {
+                        "description": "Proibido - assinatura não pertence ao usuário"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/subscriptions/{subscription}/renew": {
+            "post": {
+                "tags": [
+                    "Admin",
+                    "Assinaturas"
+                ],
+                "summary": "Renovar assinatura",
+                "description": "Renova uma assinatura existente (apenas para administradores)",
+                "operationId": "renewSubscription",
+                "parameters": [
+                    {
+                        "name": "subscription",
+                        "in": "path",
+                        "description": "ID da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Assinatura renovada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Assinatura renovada com sucesso"
+                                        },
+                                        "subscription": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "active"
+                                                },
+                                                "end_date": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - sem permissão de administrador"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/subscriptions/checkout": {
+            "post": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Criar sessão de checkout para assinatura",
+                "description": "Cria uma sessão de checkout do Stripe para uma nova assinatura",
+                "operationId": "createCheckoutSession",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id",
+                                    "payment_method"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "example": "pm_card_visa"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sessão de checkout criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "subscription_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Assinatura criada com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/subscriptions/update-payment-method": {
+            "post": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Atualizar método de pagamento",
+                "description": "Atualiza o método de pagamento de uma assinatura",
+                "operationId": "updatePaymentMethod",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "subscription_id",
+                                    "payment_method"
+                                ],
+                                "properties": {
+                                    "subscription_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "example": "pm_card_visa"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Método de pagamento atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Método de pagamento atualizado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - assinatura não pertence ao usuário"
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/subscriptions/{subscription}/cancel-stripe": {
+            "post": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Cancelar assinatura no Stripe",
+                "description": "Cancela uma assinatura no sistema e no Stripe",
+                "operationId": "cancelStripeSubscription",
+                "parameters": [
+                    {
+                        "name": "subscription",
+                        "in": "path",
+                        "description": "ID da assinatura",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Assinatura cancelada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Assinatura cancelada com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - assinatura não pertence ao usuário"
+                    },
+                    "404": {
+                        "description": "Assinatura não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/subscriptions/setup-intent": {
+            "get": {
+                "tags": [
+                    "Assinaturas"
+                ],
+                "summary": "Criar intent de configuração para cartão",
+                "description": "Cria um intent de configuração do Stripe para salvar dados de cartão",
+                "operationId": "createSetupIntent",
+                "responses": {
+                    "200": {
+                        "description": "Intent de configuração criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "client_secret": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro no servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/status": {
+            "get": {
+                "tags": [
+                    "Status"
+                ],
+                "summary": "Verificar o status da API",
+                "description": "Retorna o status atual da API e suas conexões",
+                "operationId": "getStatus",
+                "responses": {
+                    "200": {
+                        "description": "Status da API",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "API está funcionando!"
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-14T22:30:51.860448Z"
+                                        },
+                                        "environment": {
+                                            "type": "string",
+                                            "example": "local"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "example": "12.2.0"
+                                        },
+                                        "database": {
+                                            "type": "string",
+                                            "example": "connected"
+                                        },
+                                        "redis": {
+                                            "type": "string",
+                                            "example": "connected"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao verificar o status",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro ao verificar serviços"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Registrar um novo usuário",
+                "description": "Cria um novo usuário no sistema. Após o registro, o usuário precisará fazer login separadamente para obter um token de acesso. Por padrão, novos usuários recebem o papel 'user'.",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "João Silva"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "senha123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "senha123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "João Silva"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "joao@example.com"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-14T22:24:22.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-14T22:24:22.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O email já está sendo utilizado."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Autenticar usuário",
+                "description": "Autentica um usuário e retorna um token de acesso JWT. Para testes, use o usuário admin: email=admin@example.com, senha=password. Esse token deve ser usado em todos os endpoints protegidos no formato 'Bearer {token}' no cabeçalho Authorization.",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Credenciais inválidas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Encerrar sessão",
+                "description": "Revoga todos os tokens de acesso do usuário. Após o logout, será necessário fazer login novamente para obter um novo token.",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "Logout bem-sucedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Todos os tokens foram revogados"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "oauth2": []
+                    }
+                ]
+            }
+        },
+        "/user/role": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Obter papel e permissões do usuário",
+                "description": "Retorna o papel e as permissões do usuário autenticado",
+                "operationId": "getUserRole",
+                "responses": {
+                    "200": {
+                        "description": "Papel e permissões do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "João Silva"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "joao@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "roles": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "user"
+                                            }
+                                        },
+                                        "permissions": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "view contents"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "oauth2": []
+                    }
+                ]
+            }
+        },
+        "/admin/users": {
+            "get": {
+                "tags": [
+                    "Administração",
+                    "Usuários"
+                ],
+                "summary": "Listar usuários",
+                "description": "Lista todos os usuários do sistema com paginação",
+                "operationId": "listUsers",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Termo de busca para filtrar usuários por nome ou email",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Usuário Teste"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "teste@example.com"
+                                                    },
+                                                    "role": {
+                                                        "type": "string",
+                                                        "example": "admin"
+                                                    },
+                                                    "permissions": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 10
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - usuário não tem permissão de admin"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/users/{user}/role": {
+            "put": {
+                "tags": [
+                    "Administração",
+                    "Usuários"
+                ],
+                "summary": "Atualizar papel do usuário",
+                "description": "Atualiza o papel (role) de um usuário específico",
+                "operationId": "updateUserRole",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "role"
+                                ],
+                                "properties": {
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "admin",
+                                            "manager",
+                                            "user"
+                                        ],
+                                        "example": "manager"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Papel atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Papel atualizado com sucesso"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Usuário Teste"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "teste@example.com"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "manager"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - usuário não tem permissão de admin"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/users/{user}/permissions": {
+            "put": {
+                "tags": [
+                    "Administração",
+                    "Usuários"
+                ],
+                "summary": "Atualizar permissões do usuário",
+                "description": "Atualiza as permissões de um usuário específico",
+                "operationId": "updateUserPermissions",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permissions"
+                                ],
+                                "properties": {
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "create_content",
+                                                "edit_content",
+                                                "delete_content",
+                                                "manage_users"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permissões atualizadas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Permissões atualizadas com sucesso"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Usuário Teste"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "teste@example.com"
+                                                },
+                                                "permissions": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - usuário não tem permissão de admin"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/users/{user}/promote-to-admin": {
+            "post": {
+                "tags": [
+                    "Administração",
+                    "Usuários"
+                ],
+                "summary": "Promover usuário a administrador",
+                "description": "Promove um usuário a administrador com todas as permissões",
+                "operationId": "promoteUserToAdmin",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário promovido a administrador com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário promovido a administrador com sucesso"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Usuário Teste"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "teste@example.com"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "admin"
+                                                },
+                                                "permissions": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Proibido - usuário não tem permissão de admin"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/stripe/webhook": {
+            "post": {
+                "tags": [
+                    "Pagamentos"
+                ],
+                "summary": "Webhook do Stripe",
+                "description": "Endpoint para receber eventos do webhook do Stripe",
+                "operationId": "stripeWebhook",
+                "requestBody": {
+                    "description": "Payload do evento do Stripe",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "evt_1NpEUXXXXXXXXXXXXXXXXXX"
+                                    },
+                                    "object": {
+                                        "type": "string",
+                                        "example": "event"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "customer.subscription.updated"
+                                    },
+                                    "data": {
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Webhook processado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Webhook processado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao processar webhook"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            },
+            "oauth2": {
+                "type": "oauth2",
+                "description": "OAuth2 para autenticação de API",
+                "flows": {
+                    "password": {
+                        "tokenUrl": "http://localhost/oauth/token",
+                        "scopes": []
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Status",
+            "description": "Verificação de status e saúde da API"
+        },
+        {
+            "name": "Autenticação",
+            "description": "Endpoints para autenticação, registro e gerenciamento de sessão"
+        },
+        {
+            "name": "Usuários",
+            "description": "Gerenciamento de usuários e perfis"
+        },
+        {
+            "name": "Planos",
+            "description": "Gerenciamento de planos de assinatura"
+        },
+        {
+            "name": "Assinaturas",
+            "description": "Gerenciamento de assinaturas de usuários"
+        },
+        {
+            "name": "Pagamentos",
+            "description": "Processamento e gerenciamento de pagamentos"
+        },
+        {
+            "name": "Admin",
+            "description": "Endpoints administrativos restritos"
+        },
+        {
+            "name": "Cursos",
+            "description": "Cursos"
+        },
+        {
+            "name": "Conteúdos Premium",
+            "description": "Conteúdos Premium"
+        },
+        {
+            "name": "Sandbox",
+            "description": "Sandbox"
+        },
+        {
+            "name": "Administração",
+            "description": "Administração"
+        }
+    ],
+    "externalDocs": {
+        "description": "Documentação adicional",
+        "url": "https://github.com/sua-organizacao/seu-repositorio"
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
+}
